@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 10px;
+    }
+
+    input,
+    textarea {
+      padding: 5px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #resumePreview {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body background="new.jpeg">
+  <div class="container">
+    <h1>Resume Builder</h1>
+    <form id="resumeForm">
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName" required>
+
+      <label for="address">Address:</label>
+      <textarea id="address" rows="3" required></textarea>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+      
+      <label for="phoneNumber">Phone Number:</label>
+      <input type="tel" id="phoneNumber" required>
+
+      <h7>Academic Details:</h7>
+      <table>
+        <tr>
+          <th>Year of Study</th>
+          <th>Institute</th>
+          <th>Course</th>
+          <th>CGPA</th>
+        </tr>
+        <tr>
+          <td><input type="text" class="yearOfStudy" required></td>
+          <td><input type="text" class="institute" required></td>
+          <td><input type="text" class="course" required></td>
+          <td><input type="text" class="cgpa" required></td>
+        </tr>
+      </table>
+      <button type="button" onclick="addAcademicDetailRow()">Add More</button>
+
+      <label for="technicalSkills">Technical Skills (One skill per line):</label>
+      <textarea id="technicalSkills" rows="4" required></textarea>
+
+      <label for="Projects Undertaken">Projects Undertaken(One skill per line):</label>
+      <textarea id="Projects Undertaken" rows="4" required></textarea>
+
+      <label for="achievements">Achievements (One hobby per line):</label>
+      <textarea id="achievements" rows="4" required></textarea>
+
+      <label for="hobbies">Hobbies (One hobby per line):</label>
+      <textarea id="hobbies" rows="4" required></textarea>
+      
+      <button type="submit">Generate Resume</button>
+    </form>
+
+    <div id="resumePreview">
+    </div>
+  </div>
+
+  <script>
+    function addAcademicDetailRow() {
+      const academicDetailsTable = document.querySelector("#resumeForm table");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td><input type="text" class="yearOfStudy" required></td>
+        <td><input type="text" class="institute" required></td>
+        <td><input type="text" class="course" required></td>
+        <td><input type="text" class="cgpa" required></td>
+      `;
+      academicDetailsTable.appendChild(newRow);
+    }
+
+    document.getElementById("resumeForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      
+      const fullName = document.getElementById("fullName").value;
+      const address = document.getElementById("address").value;
+      const email = document.getElementById("email").value;
+      const phoneNumber = document.getElementById("phoneNumber").value;
+      const academicDetailsRows = document.querySelectorAll("#resumeForm table tr:not(:first-child)");
+      const technicalSkills = document.getElementById("technicalSkills").value;
+      const ProjectsUndertaken = document.getElementById("Projects Undertaken").value;
+      const achievements= document.getElementById("achievements").value;
+      const hobbies = document.getElementById("hobbies").value;
+      
+      let academicDetailsHTML = "<h3>Academic Details:</h3><table><tr><th>Year of Study</th><th>Institute</th><th>Course</th><th>CGPA</th></tr>";
+      academicDetailsRows.forEach(row => {
+        const yearOfStudy = row.querySelector(".yearOfStudy").value;
+        const institute = row.querySelector(".institute").value;
+        const course = row.querySelector(".course").value;
+        const cgpa = row.querySelector(".cgpa").value;
+        academicDetailsHTML += `<tr><td>${yearOfStudy}</td><td>${institute}</td><td>${course}</td><td>${cgpa}</td></tr>`;
+      });
+      academicDetailsHTML += "</table>";
+
+      const technicalSkillsList = technicalSkills.trim().split('\n').map(skill => `<li>${skill}</li>`).join('');
+
+      const hobbiesList = hobbies.trim().split('\n').map(hobby => `<li>${hobby}</li>`).join('');
+      
+      const ProjectsUndertakenList = ProjectsUndertaken .trim().split('\n').map(proj => `<li>${proj}</li>`).join('');
+      
+      const achievementsList = achievements.trim().split('\n').map(ach => `<li>${ach}</li>`).join('');
+
+      const resumePreview = `
+      <h1><center>RESUME</center></h1>  
+      <h2>${fullName}</h2>
+        <p><b>Address:</b> ${address}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone Number:</b> ${phoneNumber}</p>
+
+        ${academicDetailsHTML}
+
+        <h3>Technical Skills:</h3>
+        <ul>${technicalSkillsList}</ul>
+
+        <h3>Projects Undertaken:</h3>
+        <ul>${ProjectsUndertakenList}</ul>
+
+        <h3>Achievements:</h3>
+        <ul>${achievementsList}</ul>
+        <h3>Hobbies:</h3>
+        <ul>${hobbiesList}</ul>
+        <h3>Declaration:</h3>
+        <ul> I hereby declare that all the above-mentioned information is true and correct to the best of my 
+            knowledge</ul>
+        <h3><br><br>Signature</h3>
+        <ul><b>${fullName}</b></ul>
+      `;
+
+      document.getElementById("resumePreview").innerHTML = resumePreview;
+    });
+  </script>
+</body>
+</html>
